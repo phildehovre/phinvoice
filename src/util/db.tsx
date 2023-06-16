@@ -45,6 +45,22 @@ export function useInvoices(uid: string | undefined) {
     );
 };
 
+export const getInvoicesByUser = async (userId: string | undefined) => {
+    const q = query(collection(db, 'invoices'), where('userId', '==', userId));
+    const querySnapshot = await getDocs(q);
+    const data = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    return data;
+  };
+  
+  export function useInvoicesByUser(userId: string | undefined) {
+    return useQuery(['invoices', userId], () => getInvoicesByUser(userId), {
+      enabled: !!userId,
+    });
+  }
+
 export async function setInvoice(invoice: any) {
     return setDoc(doc(db, "invoices", invoice.invoiceId), invoice);
 }

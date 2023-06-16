@@ -1,0 +1,19 @@
+.spinner-ctn {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#spinner {
+    animation: spinning 1500ms linear infinite;
+}
+
+@keyframes spinning {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(359deg);
+    }
+}

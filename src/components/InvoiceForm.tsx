@@ -5,9 +5,10 @@ import { getAuth } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { setInvoice } from '../util/db';
-// import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
+import dayjs from 'dayjs'
 
 const schema = yup.object().shape({
     band: yup.string().required('Please select a band'),
@@ -21,7 +22,6 @@ function InvoiceForm() {
     const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({ resolver: yupResolver(schema) })
 
     const auth = getAuth()
-    const navigate = useNavigate()
     const queryClient = useQueryClient()
 
 
@@ -38,24 +38,25 @@ function InvoiceForm() {
         console.log(data)
         const invoice = {
             ...data, 
-            // 'invoiceId': uuidv4(),
+            invoiceId: uuidv4(),
             userId: auth?.currentUser?.uid,
-            createdAt: new Date().toISOString(),
+            createdAt: dayjs(),
         }
         addInvoice.mutateAsync(invoice).then((res) => {
-            navigate('/search')
+            console.log(res)
         }).catch(err => alert(err));
         reset()
     };
 
 
-    const onOptionClick = async (label, value: string) => {
+    const onOptionClick = async (label: 'band' | 'venue' | 'fee', value: string) => {
         try {
             setValue(label, value);
             // await handleSubmit(onSubmit)();
             console.log('then');
         } catch (error) {
             // handle error
+            console.log(error);
         }
     };
 
