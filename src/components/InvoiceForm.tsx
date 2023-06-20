@@ -1,29 +1,48 @@
 import { useForm } from 'react-hook-form'
-import './InvoiceForm.scss'
+import './Form.scss'
 import SelectWrapper from './Select'
 import { getAuth } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { setInvoice } from '../util/db';
-import { v4 as uuidv4 } from 'uuid';
+import { setInvoice, useEntitiesByUser } from '../util/db';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import dayjs from 'dayjs'
+import { v4 as uuidv4 } from 'uuid';
+import Spinner from './Spinner';
+import { useEffect, useState } from 'react';
 
 const schema = yup.object().shape({
-    band: yup.string().required('Please select a band'),
+    entity: yup.string().required('Please select a band'),
     venue: yup.string().required('Please enter a venue'),
     date: yup.date().required('Please enter a date'),
     fee: yup.number().required('Please enter a fee'),
 })
 
-function InvoiceForm() {
+function InvoiceForm(props: any) {
+
+    const {entities} = props
+
+    const [query, setQuery] = useState('')
+    const [data, setData] = useState([])
+    const regex = new RegExp(`.*${query}.*`, "gi");
 
     const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm({ resolver: yupResolver(schema) })
 
     const auth = getAuth()
     const queryClient = useQueryClient()
+    const navigate = useNavigate()
 
+
+    useEffect(() => {
+        if (query.length === 0) {
+            setData(entities)
+        }
+        if ( query.length > 0) {
+            let filteredData = entities?.filter((item: any) => regex.test(item.firstName))
+            setData(filteredData)
+        }
+    }, [query])
 
     const addInvoice = useMutation({
         mutationFn: (invoice: any) => setInvoice(invoice),
@@ -32,24 +51,22 @@ function InvoiceForm() {
         },
     });
 
-
-
     const onSubmit = (data: any) => {
-        console.log(data)
+        console.log('Submitting ',data)
         const invoice = {
             ...data, 
             invoiceId: uuidv4(),
             userId: auth?.currentUser?.uid,
-            createdAt: dayjs(),
+            createdAt: new Date(),
         }
         addInvoice.mutateAsync(invoice).then((res) => {
-            console.log(res)
+            navigate('/dashboard')
         }).catch(err => alert(err));
         reset()
     };
 
 
-    const onOptionClick = async (label: 'band' | 'venue' | 'fee', value: string) => {
+    const onOptionClick = async (label: any, value: any) => {
         try {
             setValue(label, value);
             // await handleSubmit(onSubmit)();
@@ -61,37 +78,36 @@ function InvoiceForm() {
     };
 
   return (
-    <div className='invoice-ctn'>
+    <div className='form-ctn'>
+        <Link to='/dashboard'> Back to list</Link>
         <h1>New invoice</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className='invoice_form'>
+        <form onSubmit={handleSubmit(onSubmit)} className='form'>
             <label htmlFor="invoice" />
             <label>Band
-                {errors?.band && <p className='invoice_form-error'>{errors?.band?.message}</p>}
+                {errors?.entity && <p className='form-error'>{errors?.entity?.message}</p>}
             </label>
-            <SelectWrapper items={
-                [
-                    {label: 'band1', value: 'band1'},
-                    {label: 'band2', value: 'band2'},
-                    {label: 'band3', value: 'band3'},
-                    {label: 'band4', value: 'band4'},
-            ]
-                } 
-                onOptionClick={onOptionClick}
-                {...register('band')}
-                label='band'
-                />
+          <SelectWrapper
+          items={entities}
+          onOptionClick={onOptionClick}
+          {...register('entity')}
+          label="entity"
+        //   typeahead={true}
+        //   query={query}
+        //   setQuery={setQuery}
+        />
+
             <label>Venue
-                {errors?.venue && <p className='invoice_form-error'>{errors?.venue?.message}</p>}
+                {errors?.venue && <p className='form-error'>{errors?.venue?.message}</p>}
             </label>
-            <input type='text'{...register('venue')}/>
+            <input className='form-input' type='text'{...register('venue')}/>
             <label>Date
-                {errors?.date && <p className='invoice_form-error'>{errors?.date?.message}</p>}
+                {errors?.date && <p className='form-error'>{errors?.date?.message}</p>}
             </label>
-            <input  type='date'{...register('date')}/>
+            <input className='form-input'  type='date'{...register('date')}/>
             <label>Fee
-               {errors?.fee &&  <p className='invoice_form-error'>{errors?.fee?.message}</p>}
+               {errors?.fee &&  <p className='form-error'>{errors?.fee?.message}</p>}
             </label>
-            <input type='number'{...register('fee')}/>
+            <input className='form-input' type='number'{...register('fee')}/>
             <button type='submit'>Submit</button>
             
         </form>

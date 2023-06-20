@@ -3,6 +3,23 @@
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  margin: auto;
+  font-family: 'Lato', sans-serif;
+}
+
+.app-bkg {
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.app-ctn {
+  width: 700px;
+  margin: auto;
+  border-radius: 15px;
+  padding: 2.5em;
+  background-color: rgba(85, 97, 255, 0.24);
 }
 
 .logo {

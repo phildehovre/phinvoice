@@ -1,0 +1,30 @@
+.invoice_item {
+
+    &-ctn {
+        display: grid;
+        grid-template-columns: 25% 25% 25% 1fr 5% 5%;
+        text-align: left;
+        background-color: rgb(227, 230, 255);
+        border: 1px solid white;
+        width: 100%;
+        padding:  .25em 1.5em;
+                
+    }
+    &-column {
+        text-align: left;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.send_invoice-btn {
+    cursor: pointer;
+    padding: .5em;
+    border-radius: 50px;
+
+    &:hover {
+        border-radius: 50px;
+        transition: all 250ms ease-in-out;
+        background-color: royalblue;
+    }
+}

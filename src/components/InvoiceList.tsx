@@ -1,52 +1,34 @@
-import { getAuth } from 'firebase/auth'
-import React from 'react'
-import {useInvoices, useInvoicesByUser} from '../util/db'
-// import * as dayjs from 'dayjs'
+import { Link } from "react-router-dom";
+import { Invoice } from "../types";
+import InvoiceItem from "./InvoiceItem";
+import "./InvoiceList.scss";
+import { useEntitiesByUser } from "../util/db";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { getAuth } from "firebase/auth";
+import { useEffect } from "react";
 
-type invoice = {
-    id: string,
-    fee: number,
-    date: string,
-    venue: string,
-    band: string
-}
+function InvoiceList(props: any) {
+  const [user] = useAuthState(getAuth());
 
-type invoiceListProps = {
-    invoiceList: invoice[]
-}
-
-function InvoiceList(props: invoiceListProps) {
-
-  const {invoiceList} = props
-
-
-    const auth = getAuth()
-
-    // const {
-    //     data: invoices, 
-    //     isLoading: isInvoicesLoading, 
-    //     error: invoicesError
-    // } = useInvoicesByUser(auth?.currentUser?.uid)
-
+  const { invoiceList } = props;
+  const { data: entities, isLoading, error } = useEntitiesByUser(user?.uid);
 
   return (
-    <div>
-<h1> invoices</h1>
-     {invoiceList?.map((invoice) => {
-          return (
-              <div key={invoice.id}>
-                  <p>{invoice.id}</p>
-                  <p>{invoice.fee}</p>
-                  {/* <p>{dayjs(invoice.date).format('ddd DD-MM-YYYY')}</p> */}
-                  <p>{invoice.venue}</p>
-                  <p>{invoice.band}</p>
-              </div>
-          )
-     })
-
-     } 
+    <div className="invoice_list-ctn">
+      <div>
+        <h1> invoices</h1>
+        <Link to="/new/invoice">New invoice</Link>
+      </div>
+      {invoiceList?.map((invoice: Invoice) => {
+        const entity = entities?.find(
+          (entity) => entity.id === invoice.entity.split("_")[0]
+        );
+        return (
+          <InvoiceItem invoice={invoice} key={invoice.id} entity={entity} />
+        );
+      })}
     </div>
-  )
+  );
 }
 
-export default InvoiceList
+export default InvoiceList;

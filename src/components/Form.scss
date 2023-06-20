@@ -1,22 +1,17 @@
-.invoice-ctn {
+.form-ctn {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
-.invoice_form {
+.form {
     display:flex;
     flex-direction:column;
     width: 500px;
     justify-content: center;
     align-items: center;
     gap: 1em;
-
-    >input{
-        width: 100%;
-        padding: .5em;
-    }
 
     >label {
         text-align: left;
@@ -27,5 +22,12 @@
         background-color: rgba(255, 78, 58, 0.267);
         border-radius: 16px;
         padding: .5em;
+    }
+
+    &-input {
+        border: 1px solid var(--mauve8);
+        border-radius: 5px;
+        padding: .75em;
+        width: 100%;
     }
 }

@@ -1,20 +1,27 @@
-import React from 'react'
+0
+import React, { useEffect } from 'react'
 import { getAuth } from 'firebase/auth'
-import { Outlet } from 'react-router'
 import InvoiceList from '../components/InvoiceList'
 import { useInvoicesByUser } from '../util/db'
+import Spinner from '../components/Spinner'
+import { useNavigate } from 'react-router-dom'
 
 function Dashboard() {
 
   const auth = getAuth()
+  const navigate = useNavigate()
 
 const {data , isLoading, error} = useInvoicesByUser(auth?.currentUser?.uid)
 
-console.log(data)
-
+useEffect(() => {
+!auth.currentUser && navigate('/')
+}, [])
   return (
-    <>
-        <InvoiceList invoiceList={data}/>
+    <>{
+      data && !isLoading
+      ?  <InvoiceList invoiceList={data}/>
+        : <Spinner />
+    }
     </>
   )
 }

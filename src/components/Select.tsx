@@ -1,16 +1,30 @@
-import React from 'react';
 import * as Select from '@radix-ui/react-select';
 import classnames from 'classnames';
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
+import {  ChevronDownIcon, ChevronUpIcon } from '@radix-ui/react-icons';
 import './Select.scss';
 import SelectItem from './SelectItem';
+import { Entity } from '../types';
+import { Link, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 
-const SelectWrapper = (props: any) => {
+const SelectWrapper = (props: {
+    items: Entity[];
+    onOptionClick: (label: string, value: string) => void;
+    label: string;  
+    typeahead?: boolean;
+    query?: string;
+    setQuery?: (value: string) => void;
+}) => {
 
 
-    const { items, onOptionClick, label } = props;
-    
+    const { items, onOptionClick, label,
+        typeahead,
+        query,
+        setQuery
+    } = props;
 
+    const navigate = useNavigate()
 
     return (
         <Select.Root
@@ -30,21 +44,28 @@ const SelectWrapper = (props: any) => {
                     <ChevronUpIcon />
                 </Select.ScrollUpButton>
                 <Select.Viewport className="SelectViewport">
-                    <Select.Group>
-                        <Select.Label className="SelectLabel">Bands</Select.Label>
-                        {items.map((option: { value: string, label: string, color: string }, index: number) => {
+                    <Select.Group className='SelectGroup'>
+                        {/* {
+                            typeahead && 
+                        <input className='select-typeahead' placeholder='Search...' type='text' onChange={(e: any) => setQuery(e.target.value)} value={query}></input>
+                        } */}
+                        <Select.Label className="SelectLabel"></Select.Label>
+                        {items.map((item: Entity, index: number) => {
                             return (
                                 <SelectItem
                                     key={index}
-                                    value={option.value}
-                                    className={classnames('SelectItem', option.value === 'banana' && 'SelectItem--selected')}
-                                    color={option.color}
+                                    value={`${item.id}_${item.name}`}
+                                    className={classnames('SelectItem', item.id === 'banana' && 'SelectItem--selected')}
+                                    // color={item.color}
                                 >
-                                    {option.label}
+                                    {item.name}
                                 </SelectItem>
                             );
                         })
                         }
+                        <Select.Separator className="SelectSeparator" />
+                        <div className='new_entity-btn' onClick={() => {navigate('/new/entity')}}>Create new entity...
+                        <FontAwesomeIcon icon={faPlus}/></div>
                     </Select.Group>
                     {/* <Select.Separator className="SelectSeparator" /> */}
                 </Select.Viewport>
@@ -57,6 +78,7 @@ const SelectWrapper = (props: any) => {
 
     )
 };
+
 
 
 export default SelectWrapper;
