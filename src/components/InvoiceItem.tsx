@@ -6,6 +6,8 @@ import { CheckIcon } from "@radix-ui/react-icons";
 import React from "react";
 import "./Checkbox.scss";
 import EmailSender from "./EmailSender";
+// import { useMutation } from "@tanstack/react-query";
+// import { updateInvoice } from "../util/db";
 
 function InvoiceItem(props: { invoice: Invoice; entity: Entity }) {
   const { invoice, entity } = props;
