@@ -1,6 +1,6 @@
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Spinner from "./Spinner";
 import { Entity, Invoice } from "../types";
 
@@ -71,7 +71,7 @@ function EmailSender(props: {
 
   function sendEmail(document_uri: string) {
     console.log(document_uri);
-    const { date, venue, fee, invoiceId } = invoice;
+    const { date, venue, fee } = invoice;
     const { address, postcode, email, name } = entity;
     try {
       fetch("https://api.sendinblue.com/v3/smtp/email", {
