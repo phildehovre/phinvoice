@@ -1,4 +1,4 @@
-import { Entity, Invoice } from "../types";
+import { Invoice } from "../types";
 import "./InvoiceItem.scss";
 import dayjs from "dayjs";
 import * as Checkbox from "@radix-ui/react-checkbox";
