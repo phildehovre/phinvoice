@@ -9,7 +9,7 @@ import EmailSender from "./EmailSender";
 // import { useMutation } from "@tanstack/react-query";
 // import { updateInvoice } from "../util/db";
 
-function InvoiceItem(props: { invoice: Invoice; entity: Entity }) {
+function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
   const { invoice, entity } = props;
   const [isChecked, setIsChecked] = React.useState(false);
 

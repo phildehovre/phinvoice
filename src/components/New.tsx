@@ -1,13 +1,11 @@
-import React from 'react'
-import { Outlet } from 'react-router'
+import { Outlet } from "react-router";
 
 function New() {
   return (
-    <div>New
-
-        <Outlet />
+    <div>
+      <Outlet />
     </div>
-  )
+  );
 }
 
-export default New
+export default New;
