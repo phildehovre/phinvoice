@@ -8,6 +8,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { v4 as uuidv4 } from "uuid";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons";
 
 const schema = yup.object().shape({
   name: yup.string().required("Please enter a name"),
@@ -53,8 +55,12 @@ function EntityForm() {
   };
   return (
     <div className="form-ctn">
-      <Link to="/dashboard"> Back to list</Link>
-      <h1>New entity</h1>
+      <div className="header-ctn">
+        <Link className="link-ctn" to="/dashboard">
+          <FontAwesomeIcon icon={faAngleDoubleLeft} />
+        </Link>
+        <h1>New entity</h1>
+      </div>
       <form onSubmit={handleSubmit(onSubmit)} className="form">
         <label htmlFor="entity" />
         <label>
@@ -63,21 +69,36 @@ function EntityForm() {
             <p className="form-error">{errors?.name?.message}</p>
           )}
         </label>
-        <input className="form-input" type="text" {...register("name")} />
+        <input
+          autoComplete="off"
+          className="form-input"
+          type="text"
+          {...register("name")}
+        />
         <label>
           E-mail address
           {errors?.email && (
             <p className="form-error">{errors?.email?.message}</p>
           )}
         </label>
-        <input className="form-input" type="text" {...register("email")} />
+        <input
+          autoComplete="off"
+          className="form-input"
+          type="text"
+          {...register("email")}
+        />
         <label>
           Address
           {errors?.address && (
             <p className="form-error">{errors?.address?.message}</p>
           )}
         </label>
-        <input className="form-input" type="text" {...register("address")} />
+        <input
+          autoComplete="off"
+          className="form-input"
+          type="text"
+          {...register("address")}
+        />
         <label>
           Postcode
           {errors?.postcode && (

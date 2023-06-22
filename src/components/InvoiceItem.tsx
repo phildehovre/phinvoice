@@ -6,17 +6,32 @@ import { CheckIcon } from "@radix-ui/react-icons";
 import React from "react";
 import "./Checkbox.scss";
 import EmailSender from "./EmailSender";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { updateInvoice } from "../util/db";
 // import { useMutation } from "@tanstack/react-query";
 // import { updateInvoice } from "../util/db";
 
 function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
+  const queryClient = useQueryClient();
   const { invoice, entity } = props;
   const [isChecked, setIsChecked] = React.useState(false);
 
   const date = dayjs(invoice.date.seconds * 1000).format("DD/MM/YYYY");
 
+  const updateInvoiceMutation = useMutation(
+    (data: any) => {
+      const { id, status } = data; // Extract id and status from the data object if necessary
+      return updateInvoice(id, status); // Call the updateInvoice function with the appropriate arguments
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(["invoices"]);
+      },
+    }
+  );
+
   const onSend = () => {
-    console.log("update item in db");
+    updateInvoiceMutation.mutate({ id: invoice.id, status: "sent" });
   };
 
   return (

@@ -35,8 +35,8 @@ export function useInvoices(uid: string | undefined) {
   });
 }
 
-export const updateInvoice = async (invoiceId: string, status: string) => {
-  const invoiceRef = doc(db, "invoices", invoiceId);
+export const updateInvoice = async (id: string, status: string) => {
+  const invoiceRef = doc(db, "invoices", id);
   await updateDoc(invoiceRef, { status });
 };
 

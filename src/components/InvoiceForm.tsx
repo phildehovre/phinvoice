@@ -4,7 +4,7 @@ import SelectWrapper from "./Select";
 import { getAuth } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { setInvoice } from "../util/db";
+import { setInvoice, updateInvoice } from "../util/db";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { v4 as uuidv4 } from "uuid";
@@ -25,8 +25,6 @@ function InvoiceForm(props: any) {
   const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
   const regex = new RegExp(`.*${query}.*`, "gi");
-
-  console.log(data);
 
   const {
     register,
@@ -60,7 +58,6 @@ function InvoiceForm(props: any) {
   });
 
   const onSubmit = (data: any) => {
-    console.log("Submitting ", data);
     const invoice = {
       ...data,
       invoiceId: uuidv4(),
@@ -80,7 +77,6 @@ function InvoiceForm(props: any) {
     try {
       setValue(label, value);
       // await handleSubmit(onSubmit)();
-      console.log("then");
     } catch (error) {
       console.log(error);
     }
@@ -118,19 +114,34 @@ function InvoiceForm(props: any) {
             <p className="form-error">{errors?.venue?.message}</p>
           )}
         </label>
-        <input className="form-input" type="text" {...register("venue")} />
+        <input
+          autoComplete="off"
+          className="form-input"
+          type="text"
+          {...register("venue")}
+        />
         <label>
           Date
           {errors?.date && (
             <p className="form-error">{errors?.date?.message}</p>
           )}
         </label>
-        <input className="form-input" type="date" {...register("date")} />
+        <input
+          autoComplete="off"
+          className="form-input"
+          type="date"
+          {...register("date")}
+        />
         <label>
           Fee
           {errors?.fee && <p className="form-error">{errors?.fee?.message}</p>}
         </label>
-        <input className="form-input" type="number" {...register("fee")} />
+        <input
+          autoComplete="off"
+          className="form-input"
+          type="number"
+          {...register("fee")}
+        />
         <button className="button-ctn" type="submit">
           Submit
         </button>
