@@ -27,7 +27,7 @@ function InvoiceList(props: any) {
       });
       setInvoiceListSorted(sorted);
     }
-  }, []);
+  });
 
   return (
     <div className="invoice_list-ctn">

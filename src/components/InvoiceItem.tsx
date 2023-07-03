@@ -39,7 +39,7 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
   const onDelete = () => {
     deleteInvoiceMutation
       .mutateAsync(invoice.invoiceId)
-      .then(() => queryClient.invalidateQueries({ queryKey: ["invoices"] }));
+      .then(() => queryClient.invalidateQueries(["invoices"]));
   };
   const onSend = () => {
     updateInvoiceMutation.mutate({ id: invoice.id, status: "sent" });

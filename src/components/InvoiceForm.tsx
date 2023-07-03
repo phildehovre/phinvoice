@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const schema = yup.object().shape({
   entity: yup.string().required("Please select a band"),
@@ -35,6 +36,7 @@ function InvoiceForm(props: any) {
   } = useForm({ resolver: yupResolver(schema) });
 
   const auth = getAuth();
+  const [user] = useAuthState(auth);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -58,14 +60,18 @@ function InvoiceForm(props: any) {
   });
 
   const onSubmit = (data: any) => {
+    const invoiceId = uuidv4();
     const invoice = {
       ...data,
-      invoiceId: uuidv4(),
-      userId: auth?.currentUser?.uid,
+      invoiceId: invoiceId,
+      userId: user?.uid,
       createdAt: new Date(),
     };
     addInvoice
       .mutateAsync(invoice)
+      .then(() => {
+        queryClient.invalidateQueries({ queryKey: ["invoices", invoiceId] });
+      })
       .then(() => {
         navigate("/dashboard");
       })
