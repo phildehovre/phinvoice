@@ -62,7 +62,7 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
         </Checkbox.Root>
       </div>
       <div className="invoice_item-column">
-        {isChecked && (
+        {isChecked && invoice.status !== "sent" && (
           <EmailSender
             invoice={{ ...invoice, date }}
             entity={entity}

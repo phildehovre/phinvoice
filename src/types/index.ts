@@ -6,6 +6,7 @@ export type Invoice = {
     venue: string,
     entity: string
     userId: string
+    status: string
 }
 
 export type Entity = {

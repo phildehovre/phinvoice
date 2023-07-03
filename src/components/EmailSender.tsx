@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import Spinner from "./Spinner";
 import { Entity, Invoice } from "../types";
+import { updateInvoice } from "../util/db";
 
 function EmailSender(props: {
   invoice: Invoice;
@@ -15,7 +16,7 @@ function EmailSender(props: {
   const { onSend, invoice, entity, isChecked } = props;
 
   function generateInvoiceFile() {
-    const { date, venue, fee, invoiceId } = invoice;
+    const { date, venue, fee, invoiceId, status } = invoice;
     const { address, postcode, email, name } = entity;
     setIsLoading(true);
     try {
@@ -43,25 +44,29 @@ function EmailSender(props: {
           output_format: `.pdf`,
           output_name: `Invoice - De Hovre - ${name} - ${date}`,
         }),
-      }).then(() => {
-        fetch(
-          `https://api.docugenerate.com/v1/document?template_id=${
-            import.meta.env.VITE_DOCUGENERATE_TEMPLATE_ID
-          }`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: import.meta.env.VITE_DOCUGENERATE_API_KEY,
-              "Content-Type": "application/json",
-            },
-          }
-        ).then((response) =>
-          response.json().then((response) => {
-            console.log(response);
-            sendEmail(response[0].document_uri);
-          })
-        );
-      });
+      })
+        .then(() => {
+          fetch(
+            `https://api.docugenerate.com/v1/document?template_id=${
+              import.meta.env.VITE_DOCUGENERATE_TEMPLATE_ID
+            }`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: import.meta.env.VITE_DOCUGENERATE_API_KEY,
+                "Content-Type": "application/json",
+              },
+            }
+          ).then((response) =>
+            response.json().then((response) => {
+              console.log(response);
+              sendEmail(response[0].document_uri);
+            })
+          );
+        })
+        .then(() => {
+          updateInvoice(invoiceId, "sent");
+        });
     } catch (err) {
       alert(err);
     } finally {
@@ -117,6 +122,7 @@ function EmailSender(props: {
   return (
     <>
       <div>
+        {isLoading && <Spinner />}
         <button
           className="send_invoice-btn"
           disabled={!isChecked || isLoading}
