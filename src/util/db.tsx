@@ -60,8 +60,8 @@ export async function setInvoice(invoice: any) {
   return setDoc(doc(db, "invoices", invoice.invoiceId), invoice);
 }
 
-export function deleteBusiness(businessId: string) {
-  return deleteDoc(doc(db, "businesses", businessId));
+export function deleteInvoice(invoiceId: string) {
+  return deleteDoc(doc(db, "invoices", invoiceId));
 }
 
 //   =============== Entities ========================

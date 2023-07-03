@@ -7,7 +7,9 @@ import React from "react";
 import "./Checkbox.scss";
 import EmailSender from "./EmailSender";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateInvoice } from "../util/db";
+import { deleteInvoice, updateInvoice } from "../util/db";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 // import { useMutation } from "@tanstack/react-query";
 // import { updateInvoice } from "../util/db";
 
@@ -30,7 +32,15 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
       },
     }
   );
+  const deleteInvoiceMutation = useMutation((id: string) => {
+    return deleteInvoice(id);
+  });
 
+  const onDelete = () => {
+    deleteInvoiceMutation
+      .mutateAsync(invoice.invoiceId)
+      .then(() => queryClient.invalidateQueries({ queryKey: ["invoices"] }));
+  };
   const onSend = () => {
     updateInvoiceMutation.mutate({ id: invoice.id, status: "sent" });
   };
@@ -82,7 +92,11 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
             />
           )}
         </div>
-        {isSelected && <div className="invoice_item-detail">DETAILS</div>}
+        {isSelected && (
+          <div className="invoice_item-detail">
+            <FontAwesomeIcon icon={faTrash} onClick={onDelete} />
+          </div>
+        )}
       </div>
     </div>
   );

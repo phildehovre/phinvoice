@@ -4,11 +4,11 @@ import SelectWrapper from "./Select";
 import { getAuth } from "firebase/auth";
 import { Link, useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { setInvoice, updateInvoice } from "../util/db";
+import { setInvoice } from "../util/db";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { v4 as uuidv4 } from "uuid";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleDoubleLeft } from "@fortawesome/free-solid-svg-icons";
 
@@ -23,8 +23,8 @@ function InvoiceForm(props: any) {
   const { entities } = props;
 
   const [query, setQuery] = useState("");
-  const [data, setData] = useState([]);
-  const regex = new RegExp(`.*${query}.*`, "gi");
+  // const [data, setData] = useState([]);
+  // const regex = new RegExp(`.*${query}.*`, "gi");
 
   const {
     register,
@@ -38,17 +38,17 @@ function InvoiceForm(props: any) {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (query.length === 0) {
-      setData(entities);
-    }
-    if (query.length > 0) {
-      let filteredData = entities?.filter((item: any) =>
-        regex.test(item.firstName)
-      );
-      setData(filteredData);
-    }
-  }, [query]);
+  // useEffect(() => {
+  //   if (query.length === 0) {
+  //     setData(entities);
+  //   }
+  //   if (query.length > 0) {
+  //     let filteredData = entities?.filter((item: any) =>
+  //       regex.test(item.firstName)
+  //     );
+  //     setData(filteredData);
+  //   }
+  // }, [query]);
 
   const addInvoice = useMutation({
     mutationFn: (invoice: any) => setInvoice(invoice),
