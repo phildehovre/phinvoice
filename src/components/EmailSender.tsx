@@ -16,9 +16,10 @@ function EmailSender(props: {
   const { onSend, invoice, entity, isChecked } = props;
 
   function generateInvoiceFile() {
-    const { date, venue, fee, invoiceId, status } = invoice;
-    const { address, postcode, email, name } = entity;
     setIsLoading(true);
+    const { date, venue, fee, invoiceId } = invoice;
+    const { address, postcode, email, name } = entity;
+    console.log(date);
     try {
       fetch("https://api.docugenerate.com/v1/document", {
         method: "POST",
@@ -28,6 +29,10 @@ function EmailSender(props: {
         },
         body: JSON.stringify({
           template_id: "Kz4pV0zjegUvwB7CWsAd",
+          name: `Invoice_De_Hovre_${name}_${date}`,
+          output_format: ".pdf",
+          output_name: `Invoice_De_Hovre_${name}_${date}`,
+          title: `Invoice_De_Hovre_${name}_${date}`,
           data: JSON.stringify([
             {
               invoiceId: `${invoiceId}`,
@@ -40,9 +45,6 @@ function EmailSender(props: {
               fee: `${fee}`,
             },
           ]),
-          name: `Invoice - De Hovre - ${name} - ${date}`,
-          output_format: `.pdf`,
-          output_name: `Invoice - De Hovre - ${name} - ${date}`,
         }),
       })
         .then(() => {

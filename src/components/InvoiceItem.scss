@@ -3,6 +3,10 @@
 .invoice_item {
 
     &-ctn {
+        width: 100%;
+    }
+
+    &-header {
         display: grid;
         grid-template-columns: 25% 25% 25% 1fr 5% 5%;
         text-align: left;

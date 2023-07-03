@@ -15,8 +15,9 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
   const queryClient = useQueryClient();
   const { invoice, entity } = props;
   const [isChecked, setIsChecked] = React.useState(false);
+  const [isSelected, setIsSelected] = React.useState<boolean>(false);
 
-  const date = dayjs(invoice.date.seconds * 1000).format("DD/MM/YYYY");
+  const date = dayjs(invoice.date.seconds * 1000).format("DD-MM-YYYY");
 
   const updateInvoiceMutation = useMutation(
     (data: any) => {
@@ -35,43 +36,53 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
   };
 
   return (
-    <div key={invoice.id} className="invoice_item-ctn">
-      <div className="invoice_item-column">
-        <p>{date}</p>
-      </div>
-      <div className="invoice_item-column">
-        <p>{invoice.entity.split("_")[1]}</p>
-      </div>
-      <div className="invoice_item-column">
-        <p>{invoice.venue}</p>
-      </div>
-      <div className="invoice_item-column">
-        <p>£ {invoice.fee}</p>
-      </div>
-      <div className="invoice_item-column">
-        <Checkbox.Root
-          className="CheckboxRoot"
-          checked={isChecked}
-          onCheckedChange={() => {
-            setIsChecked(!isChecked);
-          }}
-        >
-          <Checkbox.Indicator className="CheckboxIndicator">
-            <CheckIcon />
-          </Checkbox.Indicator>
-        </Checkbox.Root>
-      </div>
-      <div className="invoice_item-column">
-        {isChecked && invoice.status !== "sent" && (
-          <EmailSender
-            invoice={{ ...invoice, date }}
-            entity={entity}
-            isChecked={isChecked}
-            onSend={() => {
-              onSend();
+    <div
+      key={invoice.id}
+      className="invoice_item-ctn"
+      onClick={() => {
+        setIsSelected(!isSelected);
+      }}
+    >
+      <div className="invoice_item-header">
+        <div className="invoice_item-column">
+          <p>{date}</p>
+        </div>
+        <div className="invoice_item-column">
+          <p>{invoice.entity.split("_")[1]}</p>
+        </div>
+        <div className="invoice_item-column">
+          <p>{invoice.venue}</p>
+        </div>
+        <div className="invoice_item-column">
+          <p>£ {invoice.fee}</p>
+        </div>
+        <div className="invoice_item-column">
+          <Checkbox.Root
+            className="CheckboxRoot"
+            checked={isChecked}
+            onCheckedChange={() => {
+              setIsChecked(!isChecked);
             }}
-          />
-        )}
+          >
+            <Checkbox.Indicator className="CheckboxIndicator">
+              <CheckIcon />
+            </Checkbox.Indicator>
+          </Checkbox.Root>
+        </div>
+        <div className="invoice_item-column">
+          {isChecked && (
+            // && invoice.status !== "sent"
+            <EmailSender
+              invoice={{ ...invoice, date }}
+              entity={entity}
+              isChecked={isChecked}
+              onSend={() => {
+                onSend();
+              }}
+            />
+          )}
+        </div>
+        {isSelected && <div className="invoice_item-detail">DETAILS</div>}
       </div>
     </div>
   );
