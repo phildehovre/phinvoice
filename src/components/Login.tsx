@@ -1,9 +1,12 @@
 import { provider } from "../config/firebase";
 import { useNavigate } from "react-router-dom";
 import { getAuth, signInWithPopup } from "firebase/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
+import "./Login.scss";
 
 const Login = () => {
   const auth = getAuth();
+  const [user] = useAuthState(auth);
   const navigate = useNavigate();
 
   const handleSignInWithGoogle = async () => {
@@ -26,15 +29,17 @@ const Login = () => {
     }
   };
 
-  console.log(auth.currentUser ? true : false);
-
   return (
     <>
-      <button onClick={handleSignInWithGoogle}>
-        {/* <FontAwesomeIcon icon={faMailBulk} /> */}
-        <span style={{ padding: "0 .5em" }}>Sign in with Google</span>
-      </button>
-      <button onClick={handleSignOut}>Sign out</button>
+      {user ? (
+        <button className="login-btn" onClick={handleSignOut}>
+          Sign out
+        </button>
+      ) : (
+        <button className="login-btn" onClick={handleSignInWithGoogle}>
+          <span style={{ padding: "0 .5em" }}>Sign in with Google</span>
+        </button>
+      )}
     </>
   );
 };

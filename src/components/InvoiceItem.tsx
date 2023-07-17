@@ -9,7 +9,7 @@ import EmailSender from "./EmailSender";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteInvoice, updateInvoice } from "../util/db";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faCircleCheck, faTrash } from "@fortawesome/free-solid-svg-icons";
 // import { useMutation } from "@tanstack/react-query";
 // import { updateInvoice } from "../util/db";
 
@@ -23,8 +23,8 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
 
   const updateInvoiceMutation = useMutation(
     (data: any) => {
-      const { id, status } = data; // Extract id and status from the data object if necessary
-      return updateInvoice(id, status); // Call the updateInvoice function with the appropriate arguments
+      const { id } = data; // Extract id and status from the data object if necessary
+      return updateInvoice(id, data); // Call the updateInvoice function with the appropriate arguments
     },
     {
       onSuccess: () => {
@@ -42,7 +42,12 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
       .then(() => queryClient.invalidateQueries(["invoices"]));
   };
   const onSend = () => {
-    updateInvoiceMutation.mutate({ id: invoice.id, status: "sent" });
+    updateInvoiceMutation.mutate({
+      id: invoice.id,
+      status: "sent",
+      sentDate: new Date(),
+      paymentStatus: "pending",
+    });
   };
 
   return (
@@ -80,8 +85,7 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
           </Checkbox.Root>
         </div>
         <div className="invoice_item-column">
-          {isChecked && (
-            // && invoice.status !== "sent"
+          {isChecked && invoice.status !== "sent" && (
             <EmailSender
               invoice={{ ...invoice, date }}
               entity={entity}
@@ -89,6 +93,14 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
               onSend={() => {
                 onSend();
               }}
+            />
+          )}
+          {invoice.status === "sent" && (
+            <FontAwesomeIcon
+              icon={faCircleCheck}
+              size="lg"
+              color="lightgreen"
+              onClick={onDelete}
             />
           )}
         </div>

@@ -4,6 +4,9 @@
 
     &-ctn {
         width: 100%;
+        display: flex;
+        justify-content: center;    
+        align-items: center;
     }
 
     &-header {
@@ -13,6 +16,7 @@
         background-color: $bg-dark;
         border: 1px solid $bg-light;
         width: 100%;
+        margin: auto;
         padding:  .25em 1.5em;
         transition: all 250ms ease-in-out;
                 &:hover {
@@ -23,6 +27,7 @@
         text-align: left;
         display: flex;
         align-items: center;
+        justify-content: space-between;
     }
 }
 
