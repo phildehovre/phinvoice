@@ -1,0 +1,64 @@
+@import '../_variables.scss';
+
+.updateable_input-ctn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // width: 100%;
+    color: black
+}
+
+.small {
+    font-size: 0.8rem;
+}
+.normal {
+    font-size: 1rem;
+}
+.large{
+    font-size: 1.2rem;
+}
+.larger {      
+    font-size: 1.4rem;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.bolder {
+    font-weight: bolder;
+}
+
+.italic {
+    font-style: italic;
+}
+
+.input {
+    background-color: transparent;
+    color: black;
+    padding: .25em;
+    // margin: .4em;
+    border: none;
+    outline: 1px solid lightgrey;
+    border-radius: 5px;
+}
+
+.phase_number {
+    // width: 1em;
+    height: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: .4em;
+    border-radius: 5px;
+    background-color: white
+}
+
+.placeholder {
+    color: rgb(97, 97, 97);
+
+    &.italic {
+        font-style: italic;
+    }
+}

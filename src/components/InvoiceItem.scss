@@ -1,12 +1,17 @@
 @import '../_variables';
 
 .invoice_item {
-
     &-ctn {
-        width: 100%;
+        width: 700px;
         display: flex;
         justify-content: center;    
         align-items: center;
+        flex-direction: column;
+        outline: 1px solid $bg-light;
+        transition: all 250ms ease-in-out;
+        &:hover {
+            outline: 1px solid white;
+        }
     }
 
     &-header {
@@ -14,20 +19,32 @@
         grid-template-columns: 25% 25% 25% 1fr 5% 5%;
         text-align: left;
         background-color: $bg-dark;
-        border: 1px solid $bg-light;
-        width: 100%;
+        width: 90%;
         margin: auto;
         padding:  .25em 1.5em;
-        transition: all 250ms ease-in-out;
-                &:hover {
-                    border: 1px solid white;
-                }
+        cursor: pointer;
     }
     &-column {
         text-align: left;
         display: flex;
         align-items: center;
         justify-content: space-between;
+    }
+
+    &-detail {
+        width: 100%;
+    }
+
+    &-close {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        border: 1px solid rgb(80, 80, 80);
+        cursor: pointer;
+
+        &:hover {
+            color: black
+        }
     }
 }
 

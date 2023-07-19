@@ -86,6 +86,11 @@ export async function setEntity(entity: any) {
   return setDoc(doc(db, "entities", entity.id), entity);
 }
 
+export async function updateEntity(entityId: string, data: any) {
+  const entityRef = doc(db, "entities", entityId);
+  await updateDoc(entityRef, data);
+}
+
 export function deleteEntity(entityId: string) {
   return deleteDoc(doc(db, "entities", entityId));
 }

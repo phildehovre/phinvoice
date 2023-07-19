@@ -9,7 +9,13 @@ import EmailSender from "./EmailSender";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteInvoice, updateInvoice } from "../util/db";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleCheck, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronUp,
+  faCircleCheck,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
+import UpdatableInput from "./UpdatableInput";
+import Modal from "./Modal";
 // import { useMutation } from "@tanstack/react-query";
 // import { updateInvoice } from "../util/db";
 
@@ -18,6 +24,7 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
   const { invoice, entity } = props;
   const [isChecked, setIsChecked] = React.useState(false);
   const [isSelected, setIsSelected] = React.useState<boolean>(false);
+  const [showModal, setShowModal] = React.useState<boolean>(false);
 
   const date = dayjs(invoice.date.seconds * 1000).format("DD-MM-YYYY");
 
@@ -41,6 +48,7 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
       .mutateAsync(invoice.invoiceId)
       .then(() => queryClient.invalidateQueries(["invoices"]));
   };
+
   const onSend = () => {
     updateInvoiceMutation.mutate({
       id: invoice.id,
@@ -49,13 +57,39 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
       paymentStatus: "pending",
     });
   };
+  const handleCloseDetail = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    setIsSelected(false);
+  };
+
+  const renderConfirmationModal = () => {
+    return (
+      <Modal
+        isOpen={showModal}
+        onClose={() => {
+          setShowModal(false);
+        }}
+        onSave={onDelete}
+        children={
+          <>
+            <h3>Are you sure you want to delete this invoice?</h3>
+            {invoice.venue}
+            <br />
+            {dayjs(new Date(invoice.date.seconds * 1000)).format(
+              "ddd DD-MMM-YYYY"
+            )}
+          </>
+        }
+      />
+    );
+  };
 
   return (
     <div
       key={invoice.id}
       className="invoice_item-ctn"
       onClick={() => {
-        setIsSelected(!isSelected);
+        setIsSelected(true);
       }}
     >
       <div className="invoice_item-header">
@@ -104,12 +138,22 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
             />
           )}
         </div>
-        {isSelected && (
-          <div className="invoice_item-detail">
-            <FontAwesomeIcon icon={faTrash} onClick={onDelete} />
-          </div>
-        )}
       </div>
+      {isSelected && (
+        <div className="invoice_item-detail">
+          <UpdatableInput
+            label="name"
+            ressourceType="entities"
+            ressourceId={entity.id}
+            value={entity.name}
+          />
+          <FontAwesomeIcon icon={faTrash} onClick={() => setShowModal(true)} />
+          {renderConfirmationModal()}
+          <div onClick={handleCloseDetail} className="invoice_item-close">
+            <FontAwesomeIcon icon={faChevronUp} size="lg" />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
