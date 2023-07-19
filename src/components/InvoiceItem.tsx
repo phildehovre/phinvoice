@@ -10,14 +10,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteInvoice, updateInvoice } from "../util/db";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCheck,
   faChevronUp,
   faCircleCheck,
-  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import UpdatableInput from "./UpdatableInput";
 import Modal from "./Modal";
-// import { useMutation } from "@tanstack/react-query";
-// import { updateInvoice } from "../util/db";
 
 function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
   const queryClient = useQueryClient();
@@ -26,7 +24,9 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
   const [isSelected, setIsSelected] = React.useState<boolean>(false);
   const [showModal, setShowModal] = React.useState<boolean>(false);
 
-  const date = dayjs(invoice.date.seconds * 1000).format("DD-MM-YYYY");
+  const date = dayjs(new Date(invoice.date.seconds * 1000)).format(
+    "ddd DD-MMM-YYYY"
+  );
 
   const updateInvoiceMutation = useMutation(
     (data: any) => {
@@ -53,7 +53,7 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
     updateInvoiceMutation.mutate({
       id: invoice.id,
       status: "sent",
-      sentDate: new Date(),
+      sentAt: new Date(),
       paymentStatus: "pending",
     });
   };
@@ -75,9 +75,7 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
             <h3>Are you sure you want to delete this invoice?</h3>
             {invoice.venue}
             <br />
-            {dayjs(new Date(invoice.date.seconds * 1000)).format(
-              "ddd DD-MMM-YYYY"
-            )}
+            {date}
           </>
         }
       />
@@ -87,12 +85,12 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
   return (
     <div
       key={invoice.id}
-      className="invoice_item-ctn"
+      className={`invoice_item-ctn ${isSelected ? "open" : ""}`}
       onClick={() => {
         setIsSelected(true);
       }}
     >
-      <div className="invoice_item-header">
+      <div className={`invoice_item-header ${isSelected ? "open" : ""}`}>
         <div className="invoice_item-column">
           <p>{date}</p>
         </div>
@@ -105,7 +103,10 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
         <div className="invoice_item-column">
           <p>£ {invoice.fee}</p>
         </div>
-        <div className="invoice_item-column">
+        <div
+          className="invoice_item-column"
+          onClick={(e) => e.stopPropagation()}
+        >
           <Checkbox.Root
             className="CheckboxRoot"
             checked={isChecked}
@@ -131,7 +132,7 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
           )}
           {invoice.status === "sent" && (
             <FontAwesomeIcon
-              icon={faCircleCheck}
+              icon={faCheck}
               size="lg"
               color="lightgreen"
               onClick={onDelete}
@@ -140,15 +141,29 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
         </div>
       </div>
       {isSelected && (
-        <div className="invoice_item-detail">
-          <UpdatableInput
-            label="name"
-            ressourceType="entities"
-            ressourceId={entity.id}
-            value={entity.name}
-          />
-          <FontAwesomeIcon icon={faTrash} onClick={() => setShowModal(true)} />
-          {renderConfirmationModal()}
+        <div className={`invoice_item-detail-ctn `}>
+          <div className="invoice_item-detail-content">
+            <p>Performance date: {date}</p>
+            <p>
+              Sent on:{" "}
+              {dayjs(new Date(invoice.sentAt?.seconds * 1000)).format(
+                "ddd DD-MMM-YYYY"
+              )}
+            </p>
+            <UpdatableInput
+              label="additionalInfo"
+              ressourceType="invoices"
+              ressourceId={invoice.id}
+              value={invoice.additionalInfo}
+            />
+            <button
+              className="btn delete wire"
+              onClick={() => setShowModal(true)}
+            >
+              Delete
+            </button>
+            {renderConfirmationModal()}
+          </div>
           <div onClick={handleCloseDetail} className="invoice_item-close">
             <FontAwesomeIcon icon={faChevronUp} size="lg" />
           </div>

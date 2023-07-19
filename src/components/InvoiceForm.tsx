@@ -18,6 +18,7 @@ const schema = yup.object().shape({
   venue: yup.string().required("Please enter a venue"),
   date: yup.date().required("Please enter a date"),
   fee: yup.number().required("Please enter a fee"),
+  additionalInfo: yup.string(),
 });
 
 function InvoiceForm(props: any) {
@@ -147,6 +148,13 @@ function InvoiceForm(props: any) {
           className="form-input"
           type="number"
           {...register("fee")}
+        />
+        <label>Additional information</label>
+        <textarea
+          autoComplete="off"
+          className="form-input"
+          {...register("additionalInfo")}
+          rows={5}
         />
         <button className="button-ctn" type="submit">
           Submit

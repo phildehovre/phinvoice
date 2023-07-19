@@ -7,6 +7,9 @@ export type Invoice = {
     entity: string
     userId: string
     status: string
+    createdAt?: string
+    sentAt?: any
+    additionalInfo?: string
 }
 
 export type Entity = {

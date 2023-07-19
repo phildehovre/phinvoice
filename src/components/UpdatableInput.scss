@@ -4,7 +4,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    // width: 100%;
+    width: 100%;
     color: black
 }
 
@@ -35,25 +35,17 @@
 
 .input {
     background-color: transparent;
-    color: black;
+    color: white;
     padding: .25em;
     // margin: .4em;
     border: none;
     outline: 1px solid lightgrey;
     border-radius: 5px;
+    width: 100%;
+    font-size: inherit;
 }
 
-.phase_number {
-    // width: 1em;
-    height: 1em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: .4em;
-    border-radius: 5px;
-    background-color: white
-}
+
 
 .placeholder {
     color: rgb(97, 97, 97);

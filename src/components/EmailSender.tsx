@@ -77,7 +77,6 @@ function EmailSender(props: {
   }
 
   function sendEmail(document_uri: string) {
-    console.log(document_uri);
     const { date, venue, fee } = invoice;
     const { address, postcode, email, name } = entity;
     try {
@@ -123,8 +122,7 @@ function EmailSender(props: {
 
   return (
     <>
-      <div>
-        {isLoading && <Spinner />}
+      <div onClick={(e) => e.stopPropagation()}>
         <button
           className="send_invoice-btn"
           disabled={!isChecked || isLoading}

@@ -22,7 +22,6 @@ function UpdatableInput(props: {
     ressourceType,
     size = "1em",
     weight = "regular",
-    type = "text",
     ressourceId,
     inputType,
     placeholder,
@@ -37,6 +36,7 @@ function UpdatableInput(props: {
   // }, [value]);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const queryClient = useQueryClient();
 
   const updateUpdatableInput = useMutation({
@@ -78,7 +78,22 @@ function UpdatableInput(props: {
   }, [isEditing, inputValue]);
 
   const renderInput = () => {
-    if (isEditing && label === "phase_name") {
+    if (isEditing && label === "additionalInfo") {
+      return (
+        <textarea
+          style={{ fontFamily: "inherit" }}
+          className={`input ${size} ${weight}`}
+          onChange={(e) => setInputValue(e.target.value)}
+          value={inputValue}
+          ref={textareaRef}
+          placeholder={value?.toString()}
+          rows={5}
+          autoFocus
+          cols={100}
+        />
+      );
+    }
+    if (isEditing) {
       return (
         <input
           className={`input ${size} ${weight}`}
@@ -90,34 +105,7 @@ function UpdatableInput(props: {
         />
       );
     }
-    if (isEditing && label === "phase_number") {
-      return (
-        <input
-          className={`input ${size} ${weight}`}
-          type={type}
-          onChange={(e) => setInputValue(e.target.value)}
-          value={inputValue}
-          ref={inputRef}
-          placeholder={value?.toString()}
-          size={value?.toString().length}
-          autoFocus
-        />
-      );
-    }
-    if (isEditing && !label.includes("phase")) {
-      return (
-        <input
-          className={`input ${size} ${weight}`}
-          type={type}
-          onChange={(e) => setInputValue(e.target.value)}
-          value={inputValue}
-          ref={inputRef}
-          placeholder={value?.toString()}
-          size={value?.toString().length}
-          autoFocus
-        />
-      );
-    }
+
     return (
       <div
         onClick={() => setIsEditing(true)}
