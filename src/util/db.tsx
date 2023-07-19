@@ -36,6 +36,7 @@ export function useInvoices(uid: string | undefined) {
 }
 
 export const updateInvoice = async (id: string, data: any) => {
+  console.log(data);
   const invoiceRef = doc(db, "invoices", id);
   await updateDoc(invoiceRef, { ...data });
 };

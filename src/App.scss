@@ -119,6 +119,18 @@ h1 {
 
     }
   }
+
+  &.resend {
+    color: rgb(129, 142, 255);
+    border: 1px solid rgb(140, 151, 255);
+    transition: all 250ms ease-in-out;
+    
+    &:hover {
+      color: white;
+      border: 1px solid white;
+
+    }
+  }
 }
 
 @keyframes logo-spin {

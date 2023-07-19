@@ -9,20 +9,17 @@ import EmailSender from "./EmailSender";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteInvoice, updateInvoice } from "../util/db";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCheck,
-  faChevronUp,
-  faCircleCheck,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import UpdatableInput from "./UpdatableInput";
 import Modal from "./Modal";
+import { generateInvoiceFile } from "../apis/pdfGenerator";
 
 function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
   const queryClient = useQueryClient();
   const { invoice, entity } = props;
   const [isChecked, setIsChecked] = React.useState(false);
   const [isSelected, setIsSelected] = React.useState<boolean>(false);
-  const [showModal, setShowModal] = React.useState<boolean>(false);
+  const [showModal, setShowModal] = React.useState<string>("");
 
   const date = dayjs(new Date(invoice.date.seconds * 1000)).format(
     "ddd DD-MMM-YYYY"
@@ -30,6 +27,7 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
 
   const updateInvoiceMutation = useMutation(
     (data: any) => {
+      console.log(data);
       const { id } = data; // Extract id and status from the data object if necessary
       return updateInvoice(id, data); // Call the updateInvoice function with the appropriate arguments
     },
@@ -49,13 +47,19 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
       .then(() => queryClient.invalidateQueries(["invoices"]));
   };
 
-  const onSend = () => {
-    updateInvoiceMutation.mutate({
-      id: invoice.id,
-      status: "sent",
-      sentAt: new Date(),
-      paymentStatus: "pending",
-    });
+  const onSend = async () => {
+    try {
+      generateInvoiceFile(invoice, entity);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      updateInvoiceMutation.mutate({
+        id: invoice.id,
+        status: "sent",
+        sentAt: new Date(),
+        paymentStatus: "pending",
+      });
+    }
   };
   const handleCloseDetail = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -65,14 +69,34 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
   const renderConfirmationModal = () => {
     return (
       <Modal
-        isOpen={showModal}
+        isOpen={showModal === "delete"}
         onClose={() => {
-          setShowModal(false);
+          setShowModal("");
         }}
         onSave={onDelete}
         children={
           <>
             <h3>Are you sure you want to delete this invoice?</h3>
+            {invoice.venue}
+            <br />
+            {date}
+          </>
+        }
+      />
+    );
+  };
+
+  const renderResendModal = () => {
+    return (
+      <Modal
+        isOpen={showModal === "resend"}
+        onClose={() => {
+          setShowModal("");
+        }}
+        onSave={onSend}
+        children={
+          <>
+            <h3>Are you sure you want to re-send this invoice?</h3>
             {invoice.venue}
             <br />
             {date}
@@ -143,26 +167,43 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
       {isSelected && (
         <div className={`invoice_item-detail-ctn `}>
           <div className="invoice_item-detail-content">
-            <p>Performance date: {date}</p>
+            {/* <p>Invoice ID: {invoice.invoiceId}</p> */}
             <p>
               Sent on:{" "}
               {dayjs(new Date(invoice.sentAt?.seconds * 1000)).format(
                 "ddd DD-MMM-YYYY"
               )}
             </p>
+            <p>To: {entity.email}</p>
+            <p>Performance date: {date}</p>
             <UpdatableInput
               label="additionalInfo"
               ressourceType="invoices"
               ressourceId={invoice.id}
               value={invoice.additionalInfo}
             />
-            <button
-              className="btn delete wire"
-              onClick={() => setShowModal(true)}
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+              }}
             >
-              Delete
-            </button>
+              <button
+                className="btn delete wire"
+                onClick={() => setShowModal("delete")}
+              >
+                Delete
+              </button>
+              <button
+                className="btn resend wire"
+                onClick={() => setShowModal("resend")}
+              >
+                Re-send
+              </button>
+            </div>
             {renderConfirmationModal()}
+            {renderResendModal()}
           </div>
           <div onClick={handleCloseDetail} className="invoice_item-close">
             <FontAwesomeIcon icon={faChevronUp} size="lg" />
