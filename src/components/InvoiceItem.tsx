@@ -25,18 +25,6 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
     "ddd DD-MMM-YYYY"
   );
 
-  const updateInvoiceMutation = useMutation(
-    (data: any) => {
-      console.log(data);
-      const { id } = data; // Extract id and status from the data object if necessary
-      return updateInvoice(id, data); // Call the updateInvoice function with the appropriate arguments
-    },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries(["invoices"]);
-      },
-    }
-  );
   const deleteInvoiceMutation = useMutation((id: string) => {
     return deleteInvoice(id);
   });
