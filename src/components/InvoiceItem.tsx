@@ -7,7 +7,7 @@ import React from "react";
 import "./Checkbox.scss";
 import EmailSender from "./EmailSender";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteInvoice, updateInvoice } from "../util/db";
+import { deleteInvoice } from "../util/db";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import UpdatableInput from "./UpdatableInput";
