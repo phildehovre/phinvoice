@@ -52,15 +52,9 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
       generateInvoiceFile(invoice, entity);
     } catch (err) {
       console.log(err);
-    } finally {
-      updateInvoiceMutation.mutate({
-        id: invoice.id,
-        status: "sent",
-        sentAt: new Date(),
-        paymentStatus: "pending",
-      });
     }
   };
+
   const handleCloseDetail = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setIsSelected(false);

@@ -38,11 +38,7 @@ export function sendEmail(
         },
         subject: `Invoice - Phil De Hovre - ${date} - ${venue}`,
       }),
-    })
-      .then(() => {
-        // onSend();
-      })
-      .catch((error) => console.error(error));
+    }).catch((error) => console.error(error));
   } catch (err) {
     console.log(err);
   }

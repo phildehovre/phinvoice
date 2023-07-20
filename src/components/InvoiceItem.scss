@@ -2,12 +2,7 @@
 
 .invoice_item {
     &-ctn {
-        min-height: 2.5em;
-        width: 700px;
-        display: flex;
-        justify-content: center;    
-        align-items: center;
-        flex-direction: column;
+        width: 100%;
         outline: 1px solid $bg-light;
         transition: all 100ms ease-in-out;
         &:hover {
@@ -18,30 +13,37 @@
             background-color: $item-bkg-light;
             height: fit-content;
         }
+
     }
     
     &-header {
         display: grid;
-        grid-template-columns: 25% 25% 25% 1fr 5% 5%;
+        flex-direction: column;
+        grid-template-columns: 1fr 1fr;
         text-align: left;
         background-color: $bg-dark;
-        width: 90%;
+        width: 100%;
         margin: auto;
         padding:  .25em 1.5em;
         &.open {
             background-color: $item-bkg-light;
         }
         cursor: pointer;
+
     }
     &-column {
-        height: 2.5em;
+        height: 1.5em;
         text-align: left;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        &:last-child {
-            justify-content: flex-end;
+        > p {
+            margin: 0;
+            font-size: .8em;
         }
+        // &:last-child {
+        //     justify-content: flex-end;
+        // }
     }
     
     &-detail {
@@ -96,4 +98,57 @@
         background-color: $accent;
         color: $accent
     }
+}
+
+@media screen and (min-width: 768px) {
+    .invoice_item {
+        &-ctn {
+            min-height: 2.5em;
+            width: 700px;
+            display: flex;
+            justify-content: center;    
+            align-items: center;
+            flex-direction: column;
+            outline: 1px solid $bg-light;
+            transition: all 100ms ease-in-out;
+            &:hover {
+                outline: 1px solid $item-border-light;
+            }
+    
+            &.open {
+                background-color: $item-bkg-light;
+                height: fit-content;
+            }
+        }
+        
+        &-header {
+            display: grid;
+            grid-template-columns: 25% 25% 25% 1fr 5% 5%;
+            text-align: left;
+            background-color: $bg-dark;
+            width: 90%;
+            margin: auto;
+            padding:  .25em 1.5em;
+            &.open {
+                background-color: $item-bkg-light;
+            }
+            cursor: pointer;
+        }
+        &-column {
+            height: 1.5em;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            > p {
+                margin: 0;
+                font-size: 1em;
+            }
+            &:last-child {
+                justify-content: flex-end;
+            }
+        }
+       
+    }
+    
 }

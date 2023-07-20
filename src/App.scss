@@ -155,3 +155,12 @@ h1 {
 .read-the-docs {
   color: #888;
 }
+
+
+@media screen and (max-width: 768px) {
+  .app-ctn {
+    width: 100%;
+    padding: 1em;
+  }
+}
+  
