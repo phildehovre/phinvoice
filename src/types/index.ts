@@ -14,9 +14,10 @@ export type Invoice = {
 
 export type Entity = {
     name: string
-    email: string,
+    email: string | string[]
     address: string,
     postcode: string,
     id: string,
     userId: string,
+    bcc?: string | string[]
 }

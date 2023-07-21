@@ -6,8 +6,37 @@ export function sendEmail(
   entity: Entity
 ) {
   const { date, venue, fee } = invoice;
-  const { address, postcode, email, name } = entity;
+  const { address, postcode, email, name, bcc } = entity;
+
   try {
+    let body = {
+      sender: {
+        name: "Phil De Hovre",
+        email: "ph.dehovre@gmail.com",
+      },
+      to: [
+        {
+          email: email,
+          name: name,
+        },
+      ],
+      templateId: 2,
+      params: {
+        name: name,
+        location: venue,
+        date: date,
+        fee: `£ ${fee}`,
+        address: address,
+        postcode: postcode,
+        document_uri: document_uri,
+      },
+      subject: `Invoice - Phil De Hovre - ${date} - ${venue}`,
+    };
+
+    if (bcc) {
+      body = { ...body, bcc: [{ email: bcc }] } as any;
+    }
+
     fetch("https://api.sendinblue.com/v3/smtp/email", {
       method: "POST",
       headers: {
@@ -15,29 +44,7 @@ export function sendEmail(
         "api-key": import.meta.env.VITE_SENDINBLUE_API_KEY,
         "content-type": "application/json",
       },
-      body: JSON.stringify({
-        sender: {
-          name: "Phil De Hovre",
-          email: "ph.dehovre@gmail.com",
-        },
-        to: [
-          {
-            email: email,
-            name: name,
-          },
-        ],
-        templateId: 2,
-        params: {
-          name: name,
-          location: venue,
-          date: date,
-          fee: `£ ${fee}`,
-          address: address,
-          postcode: postcode,
-          document_uri: document_uri,
-        },
-        subject: `Invoice - Phil De Hovre - ${date} - ${venue}`,
-      }),
+      body: JSON.stringify(body),
     }).catch((error) => console.error(error));
   } catch (err) {
     console.log(err);

@@ -122,8 +122,10 @@
         }
         
         &-header {
+            min-height: 2.5em;
             display: grid;
             grid-template-columns: 25% 25% 25% 1fr 5% 5%;
+            align-items: center;
             text-align: left;
             background-color: $bg-dark;
             width: 90%;

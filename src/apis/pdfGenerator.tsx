@@ -5,7 +5,6 @@ import { updateInvoice } from "../util/db";
 export function generateInvoiceFile(invoice: Invoice, entity: Entity) {
   const { date, venue, fee, invoiceId } = invoice;
   const { address, postcode, email, name } = entity;
-  console.log(date);
   try {
     fetch("https://api.docugenerate.com/v1/document", {
       method: "POST",
@@ -47,7 +46,6 @@ export function generateInvoiceFile(invoice: Invoice, entity: Entity) {
           }
         ).then((response) =>
           response.json().then((response) => {
-            console.log(response);
             sendEmail(response[0].document_uri, invoice, entity);
           })
         );

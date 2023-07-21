@@ -3,7 +3,7 @@ import "./InvoiceItem.scss";
 import dayjs from "dayjs";
 import * as Checkbox from "@radix-ui/react-checkbox";
 import { CheckIcon } from "@radix-ui/react-icons";
-import React from "react";
+import React, { useMemo } from "react";
 import "./Checkbox.scss";
 import EmailSender from "./EmailSender";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -21,8 +21,10 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
   const [isSelected, setIsSelected] = React.useState<boolean>(false);
   const [showModal, setShowModal] = React.useState<string>("");
 
-  const date = dayjs(new Date(invoice.date.seconds * 1000)).format(
-    "ddd DD-MMM-YYYY"
+  const date = useMemo(
+    () =>
+      dayjs(new Date(invoice.date.seconds * 1000)).format("ddd DD-MMM-YYYY"),
+    [invoice.date]
   );
 
   const deleteInvoiceMutation = useMutation((id: string) => {
@@ -37,9 +39,11 @@ function InvoiceItem(props: { invoice: Invoice; entity?: any }) {
 
   const onSend = async () => {
     try {
-      generateInvoiceFile(invoice, entity);
+      generateInvoiceFile({ ...invoice, date }, entity);
     } catch (err) {
       console.log(err);
+    } finally {
+      setShowModal("");
     }
   };
 

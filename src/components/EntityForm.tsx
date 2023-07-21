@@ -16,6 +16,7 @@ const schema = yup.object().shape({
   email: yup.string().email().required("Please enter a valid e-mail address"),
   address: yup.string().required("Please enter a valid address"),
   postcode: yup.string().required("Please enter a valid postcode"),
+  bcc: yup.string().email(),
 });
 
 function EntityForm() {
@@ -44,6 +45,7 @@ function EntityForm() {
       id: uuidv4(),
       userId: user?.uid,
       createdAt: new Date(),
+      bcc: data.bcc ? data.bcc : [],
     };
     addEntity
       .mutateAsync(entity)
@@ -86,6 +88,16 @@ function EntityForm() {
           className="form-input"
           type="text"
           {...register("email")}
+        />
+        <label>
+          bcc
+          {errors?.bcc && <p className="form-error">{errors?.bcc?.message}</p>}
+        </label>
+        <input
+          autoComplete="off"
+          className="form-input"
+          type="text"
+          {...register("bcc")}
         />
         <label>
           Address
