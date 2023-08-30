@@ -1,4 +1,4 @@
-import { Entity, Invoice } from "../types";
+import { Entity, Invoice, sendEmailBody, sendEmailBodyBcc } from "../types";
 
 export function sendEmail(
   document_uri: string,
@@ -9,7 +9,7 @@ export function sendEmail(
   const { address, postcode, email, name, bcc } = entity;
 
   try {
-    let body = {
+    let body: sendEmailBody = {
       sender: {
         name: "Phil De Hovre",
         email: "ph.dehovre@gmail.com",
@@ -34,7 +34,7 @@ export function sendEmail(
     };
 
     if (bcc) {
-      body = { ...body, bcc: [{ email: bcc }] } as any;
+      body = { ...body, bcc: [{ email: bcc }] } as sendEmailBodyBcc;
     }
 
     fetch("https://api.sendinblue.com/v3/smtp/email", {

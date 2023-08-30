@@ -22,6 +22,7 @@
     "dayjs": "^1.11.8",
     "dotenv": "^16.1.4",
     "firebase": "^9.22.2",
+    "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-firebase-hooks": "^5.1.1",

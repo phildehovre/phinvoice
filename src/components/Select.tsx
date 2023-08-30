@@ -45,7 +45,7 @@ const SelectWrapper = (props: {
                         <input className='select-typeahead' placeholder='Search...' type='text' onChange={(e: any) => setQuery(e.target.value)} value={query}></input>
                         } */}
               <Select.Label className="SelectLabel"></Select.Label>
-              {items.map((item: Entity, index: number) => {
+              {items.map((item: any, index: number) => {
                 return (
                   <SelectItem
                     key={index}

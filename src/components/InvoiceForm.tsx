@@ -18,6 +18,7 @@ const schema = yup.object().shape({
   venue: yup.string().required("Please enter a venue"),
   date: yup.date().required("Please enter a date"),
   fee: yup.number().required("Please enter a fee"),
+  type: yup.string().required("Please select a type"),
   additionalInfo: yup.string(),
 });
 
@@ -25,8 +26,6 @@ function InvoiceForm(props: any) {
   const { entities } = props;
 
   const [query, setQuery] = useState("");
-  // const [data, setData] = useState([]);
-  // const regex = new RegExp(`.*${query}.*`, "gi");
 
   const {
     register,
@@ -40,18 +39,6 @@ function InvoiceForm(props: any) {
   const [user] = useAuthState(auth);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (query.length === 0) {
-  //     setData(entities);
-  //   }
-  //   if (query.length > 0) {
-  //     let filteredData = entities?.filter((item: any) =>
-  //       regex.test(item.firstName)
-  //     );
-  //     setData(filteredData);
-  //   }
-  // }, [query]);
 
   const addInvoice = useMutation({
     mutationFn: (invoice: any) => setInvoice(invoice),
@@ -114,7 +101,6 @@ function InvoiceForm(props: any) {
           query={query}
           setQuery={setQuery}
         />
-
         <label>
           Venue
           {errors?.venue && (

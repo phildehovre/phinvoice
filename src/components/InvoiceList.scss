@@ -1,3 +1,5 @@
+@import "../_variables.scss";
+
 .invoice_list-ctn {
     display: flex;
     flex-direction: column;
@@ -5,4 +7,23 @@
     justify-items: center;
     width: 100%;
     gap: .5em;
+}
+
+.type-ctn{
+    display: flex;
+    gap: 1em;
+    padding: 0 0 2em 0;
+}
+
+.type-btn {
+    background-color: $accent;
+    color: black;
+    padding: 1em;
+    border-radius: 16px;
+    width: 5em;
+
+    &.selected {
+        background-color: $accent-light;
+    }
+
 }

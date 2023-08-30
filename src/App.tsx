@@ -15,7 +15,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/new" element={<New />}>
-              <Route path="/new/invoice" element={<InvoicePage />} />
+              <Route path="/new/invoice/music" element={<InvoicePage />} />
+              <Route path="/new/invoice/services" element={<InvoicePage />} />
               <Route path="/new/entity" element={<EntityForm />} />
             </Route>
           </Routes>
