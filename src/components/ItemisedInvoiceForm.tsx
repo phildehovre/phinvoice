@@ -14,10 +14,22 @@ import {
   faClose,
   faPlus,
 } from "@fortawesome/free-solid-svg-icons";
-// import SelectWrapper from "./Select";
 import "./Form.scss";
 import { v4 as uuidv4 } from "uuid";
 
+interface ItemisedInvoice {
+  additionalInfo: string;
+  date: Date;
+  entity: string;
+  item1: string;
+  fee1: number;
+  item2: string;
+  fee2: number;
+}
+
+// TODO convert items to array of objects with index and destructure in emailsender/pdfgenerator
+
+// import SelectWrapper from "./Select";
 const schema = yup
   .object()
   .shape({
@@ -55,7 +67,6 @@ function ItemisedInvoiceForm(props: any) {
     handleSubmit,
     formState: { errors },
     reset,
-    setValue,
   } = useForm({ resolver: yupResolver(schema) });
 
   const auth = getAuth();
@@ -95,6 +106,7 @@ function ItemisedInvoiceForm(props: any) {
   const renderItemFields = () => {
     return Object.keys(items).map((item) => {
       const itemObject = items[item];
+      console.log(itemObject);
       return (
         <div
           key={item}
@@ -154,7 +166,7 @@ function ItemisedInvoiceForm(props: any) {
                 setItems((prevItems) => {
                   const newItems = { ...prevItems };
                   if (Object.keys(newItems).length > 1) {
-                    delete newItems[item];
+                    delete newItems[Object.keys(items).pop() as string];
                   }
                   return newItems;
                 });
@@ -165,7 +177,6 @@ function ItemisedInvoiceForm(props: any) {
       );
     });
   };
-  console.log(items);
   return (
     <div className="form-ctn">
       <div className="header-ctn">
