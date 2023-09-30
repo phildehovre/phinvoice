@@ -2,7 +2,12 @@ import { useForm } from "react-hook-form";
 import "./Form.scss";
 import SelectWrapper from "./Select";
 import { getAuth } from "firebase/auth";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useResolvedPath,
+} from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { setInvoice } from "../util/db";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -18,7 +23,6 @@ const schema = yup.object().shape({
   venue: yup.string().required("Please enter a venue"),
   date: yup.date().required("Please enter a date"),
   fee: yup.number().required("Please enter a fee"),
-  type: yup.string().required("Please select a type"),
   additionalInfo: yup.string(),
 });
 
@@ -39,6 +43,9 @@ function InvoiceForm(props: any) {
   const [user] = useAuthState(auth);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  console.log();
 
   const addInvoice = useMutation({
     mutationFn: (invoice: any) => setInvoice(invoice),
@@ -46,7 +53,6 @@ function InvoiceForm(props: any) {
       queryClient.invalidateQueries(["invoices"]);
     },
   });
-
   const onSubmit = (data: any) => {
     const invoiceId = uuidv4();
     const invoice = {
@@ -54,6 +60,7 @@ function InvoiceForm(props: any) {
       invoiceId: invoiceId,
       userId: user?.uid,
       createdAt: new Date(),
+      type: location.pathname.split("/")[3],
     };
     addInvoice
       .mutateAsync(invoice)

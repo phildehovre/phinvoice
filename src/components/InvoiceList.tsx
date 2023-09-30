@@ -10,6 +10,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import Modal from "./Modal";
+import ItemisedInvoiceItem from "./ItemisedInvoiceItem";
 
 function InvoiceList(props: any) {
   const [user] = useAuthState(getAuth());
@@ -39,9 +40,6 @@ function InvoiceList(props: any) {
     <div className="invoice_list-ctn">
       <div className="header-ctn">
         <h1>Invoices</h1>
-        {/* <Link className="link-ctn" to="/new/invoice">
-          <FontAwesomeIcon icon={faPlus} size="lg" />
-        </Link> */}
         <button
           className="link-ctn"
           onClick={() => {
@@ -55,6 +53,15 @@ function InvoiceList(props: any) {
         const entity = entities?.find(
           (entity) => entity.id === invoice.entity.split("_")[0]
         );
+        if (invoice.type === "services") {
+          return (
+            <ItemisedInvoiceItem
+              invoice={invoice}
+              key={invoice.id}
+              entity={entity}
+            />
+          );
+        }
         return (
           <InvoiceItem invoice={invoice} key={invoice.id} entity={entity} />
         );

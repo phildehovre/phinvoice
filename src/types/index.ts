@@ -10,6 +10,7 @@ export type Invoice = {
     createdAt?: string
     sentAt?: any
     additionalInfo?: string
+    type?: string
 }
 
 export type Entity = {

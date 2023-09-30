@@ -25,6 +25,7 @@ interface ItemisedInvoice {
   fee1: number;
   item2: string;
   fee2: number;
+  items: { [key: string]: { label: string; fee: number } };
 }
 
 // TODO convert items to array of objects with index and destructure in emailsender/pdfgenerator
@@ -82,7 +83,6 @@ function ItemisedInvoiceForm(props: any) {
   });
 
   const onSubmit = (data: any) => {
-    console.log(data);
     const invoiceId = uuidv4();
     const invoice = {
       ...data,
